@@ -14,10 +14,9 @@ public class MecanumDrive implements IDrivetrain {
     private List<DcMotor> motors; //rf, lf, rb, lb
     private IIMU imu;
 
-    private final double END_TOLERANCE = 5;
+    private final double END_TOLERANCE_DEG = 5;
 
-    private ElapsedTime turnTime;
-    private ElapsedTime distanceTime;
+    private ElapsedTime timer;
 
     Telemetry telemetry;
 
@@ -27,8 +26,7 @@ public class MecanumDrive implements IDrivetrain {
         this.imu.init();
         this.telemetry = telemetry;
 
-        turnTime = new ElapsedTime();
-        distanceTime = new ElapsedTime();
+        timer = new ElapsedTime();
     }
 
     public void setAllPowers(double rf, double lf, double rb, double lb) {
@@ -39,18 +37,46 @@ public class MecanumDrive implements IDrivetrain {
     }
 
     @Override
-    public boolean move(double distance, double angle, double speed, boolean slowStartAndStop) {
-        return false;
+    public void move(double distance, double angle, double speed, boolean slowStartAndStop) {
+        double mult = 8 / speed;
+        int time = (int) (mult * distance);
+        angle = Math.toRadians(angle);
+        double x = Math.cos(angle);
+        double rfPower = speed * (Math.cos(angle) + x);
+        double lfPower = speed * (Math.sin(angle) + x);
+        double rbPower = speed * (Math.sin(angle) + x);
+        double lbPower = speed * (Math.cos(angle) + x);
+        setAllPowers(rfPower, lfPower, rbPower, lbPower);
+        pause(time);
+        stop();
     }
 
     @Override
-    public boolean rotate(double angle, double speed, boolean slowStartAndStop) {
-        return false;
+    public void turn(double angle, double speed, boolean slowStartAndStop) {
+        imu.setCurrentPosToZero();
+        if (angle <= 180) {
+            setAllPowers(-speed, speed, -speed, speed);
+        } else {
+            setAllPowers(speed, -speed, speed, -speed);
+        }
+        checkAngle(angle);
+        stop();
     }
 
     @Override
     public void stop() {
+        setAllPowers(0, 0, 0, 0);
+    }
 
+    public void pause(int millis) {
+        timer.reset();
+        while (timer.milliseconds() < millis)
+            continue;
+    }
+
+    public void checkAngle(double target) {
+        while (imu.getZAngle() < target - END_TOLERANCE_DEG || imu.getZAngle() > target + END_TOLERANCE_DEG)
+            continue;
     }
 
 }

@@ -8,8 +8,6 @@ public interface IIMU {
 
     double getZAngle();
 
-    double getZAngle(double targetAngle);
-
     double getXAcc();
 
     double getYAcc();
