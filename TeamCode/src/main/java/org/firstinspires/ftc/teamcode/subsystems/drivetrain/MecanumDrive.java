@@ -37,10 +37,10 @@ public class MecanumDrive implements IDrivetrain {
     }
 
     @Override
-    public void move(double distance, double angle, double speed, boolean slowStartAndStop) {
+    public boolean move(double distance, double speed) {
         double mult = 8 / speed;
         int time = (int) (mult * distance);
-        angle = Math.toRadians(angle);
+        double angle = Math.toRadians(0);
         double x = Math.cos(angle);
         double rfPower = speed * (Math.cos(angle) + x);
         double lfPower = speed * (Math.sin(angle) + x);
@@ -49,10 +49,11 @@ public class MecanumDrive implements IDrivetrain {
         setAllPowers(rfPower, lfPower, rbPower, lbPower);
         pause(time);
         stop();
+        return false;
     }
 
     @Override
-    public void turn(double angle, double speed, boolean slowStartAndStop) {
+    public boolean turn(double angle, double speed) {
         imu.setCurrentPosToZero();
         if (angle <= 180) {
             setAllPowers(-speed, speed, -speed, speed);
@@ -61,6 +62,7 @@ public class MecanumDrive implements IDrivetrain {
         }
         checkAngle(angle);
         stop();
+        return true;
     }
 
     @Override
@@ -75,8 +77,7 @@ public class MecanumDrive implements IDrivetrain {
     }
 
     public void checkAngle(double target) {
-        while (imu.getZAngle() < target - END_TOLERANCE_DEG || imu.getZAngle() > target + END_TOLERANCE_DEG)
-            continue;
+        while (imu.getZAngle() < target - END_TOLERANCE_DEG || imu.getZAngle() > target + END_TOLERANCE_DEG);
     }
 
 }

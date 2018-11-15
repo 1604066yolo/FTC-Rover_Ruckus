@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystems.drivetrain;
 
 public interface IDrivetrain {
 
-    void move(double distance, double angle /*deg*/, double speed, boolean slowStartAndStop);
+    boolean move(double distance, double speed);
 
-    void turn(double angle, double speed, boolean slowStartAndStop);
+    boolean turn(double angle, double speed);
 
     void stop();
 
