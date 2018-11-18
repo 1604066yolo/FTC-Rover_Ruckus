@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous.Linear;
+package org.firstinspires.ftc.teamcode.autonomous.linear;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.actions.ActionCaller;
 import org.firstinspires.ftc.teamcode.actions.TankDriveAction;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.IDrivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.TankDrive;
 import org.firstinspires.ftc.teamcode.subsystems.imu.BoschIMU;
 import org.firstinspires.ftc.teamcode.subsystems.imu.IIMU;

@@ -62,6 +62,18 @@ public class BoschIMU implements IIMU {
         return imu.getVelocity().zVeloc;
     }
 
+    public double getXPos() {
+        return imu.getPosition().x;
+    }
+
+    public double getYPos() {
+        return imu.getPosition().y;
+    }
+
+    public double getZPos() {
+        return imu.getPosition().z;
+    }
+
     @Override
     public void calibrateDefaults() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

@@ -1,0 +1,114 @@
+package org.firstinspires.ftc.teamcode.autonomous.test;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@Autonomous(group = "test", name = "TEST LinearOpMode")
+public class LinearTest extends LinearOpMode {
+
+    private DcMotor r;
+    private DcMotor l;
+
+    private double prevREncoderPos;
+    private double prevLEncoderPos;
+
+    private final double turningRadius = 6;
+    private final double TICKS_PER_ROTATION = 1440;
+    private final double GEAR_RATIO = 3;
+    private final double CIRCUMFERENCE = 4;
+    private double convert(double d) { return (d / CIRCUMFERENCE) * TICKS_PER_ROTATION / GEAR_RATIO; }
+
+    @Override
+    public void runOpMode() {
+        r = hardwareMap.dcMotor.get("right");
+        l = hardwareMap.dcMotor.get("left");
+
+        l.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        /*
+        *
+        *  START OPMODE
+        *
+        */
+
+        while (opModeIsActive()) {
+            while (!driveForward(10, .5));
+            while (!driveForward(10, .75));
+            while (!driveForward(10, 1));
+            while (!driveBackward(10, .75));
+            while (!driveBackward(10, .75));
+            while (!driveBackward(10, 1));
+            while (!turnRight(90, .5));
+            while (!turnRight(90, .75));
+            while (!turnRight(90, 1));
+            while (!turnLeft(90, .5));
+            while (!turnLeft(90, .75));
+            while (!turnLeft(90, 1));
+            stop();
+        }
+    }
+
+    public boolean driveForward(double distance, double speed) {
+        double ticks = convert(distance);
+        r.setPower(speed);
+        l.setPower(speed);
+        if (r.getCurrentPosition() < prevREncoderPos + ticks && l.getCurrentPosition() < prevLEncoderPos + ticks)
+            return false;
+        prevREncoderPos = r.getCurrentPosition();
+        prevLEncoderPos = l.getCurrentPosition();
+        stopMotors();
+        return true;
+    }
+
+    public boolean driveBackward(double distance, double speed) {
+        double ticks = convert(distance);
+        r.setPower(-speed);
+        l.setPower(-speed);
+        if (r.getCurrentPosition() > prevREncoderPos - ticks && l.getCurrentPosition() > prevLEncoderPos - ticks)
+            return false;
+        prevREncoderPos = r.getCurrentPosition();
+        prevLEncoderPos = l.getCurrentPosition();
+        stopMotors();
+        return true;
+    }
+
+    public boolean turnRight(double angle, double speed) {
+        angle = Math.toRadians(angle) * turningRadius;
+        double ticks = convert(angle);
+        r.setPower(-speed);
+        l.setPower(speed);
+        if (r.getCurrentPosition() > prevREncoderPos - ticks && l.getCurrentPosition() < prevLEncoderPos + ticks)
+            return false;
+        prevREncoderPos = r.getCurrentPosition();
+        prevLEncoderPos = l.getCurrentPosition();
+        stopMotors();
+        return true;
+    }
+
+    public boolean turnLeft(double angle, double speed) {
+        angle = Math.toRadians(angle) * turningRadius;
+        double ticks = convert(angle);
+        r.setPower(speed);
+        l.setPower(-speed);
+        if (r.getCurrentPosition() < prevREncoderPos + ticks && l.getCurrentPosition() > prevLEncoderPos - ticks)
+            return false;
+        prevREncoderPos = r.getCurrentPosition();
+        prevLEncoderPos = l.getCurrentPosition();
+        stopMotors();
+        return true;
+    }
+
+    public void stopMotors() {
+        r.setPower(0);
+        l.setPower(0);
+    }
+
+}

@@ -36,27 +36,7 @@ public class AutonDepot extends OpMode {
     }
 
     public void loop() {
-        if (step == 0) {
-            drive.move(20, 0, .5, false);
-            step++;
-        } else if (step == 1) {
-            drive.move(20, 90, .5, false);
-            step++;
-        } else if (step == 2) {
-            drive.move(20, 180, .5, false);
-            step++;
-        } else if (step == 3) {
-            drive.move(20, 270, .5, false);
-            step++;
-        } else if (step == 4) {
-            drive.turn(90, .5, false);
-            step++;
-        } else if (step == 5) {
-            drive.turn(270, .25, false);
-            step++;
-        } else {
-            drive.stop();
-        }
+
     }
 
 }
