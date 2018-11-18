@@ -37,14 +37,11 @@ public class PID {
      * @return The output which impacts state value (e.g. motor throttle).
      */
     public double update(double desiredValue, double actualValue, double dt) {
-        double e = desiredValue - actualValue;
-        runningIntegral = clampValue(runningIntegral + e * dt,
-                integralMin, integralMax);
-        double d = (e - previousError) / dt;
-        double output = clampValue(kp * (e + (runningIntegral / ti) + (td * d)),
-                outputMin, outputMax);
-
-        previousError = e;
+        double error = desiredValue - actualValue;
+        runningIntegral = clampValue(runningIntegral + error * dt, integralMin, integralMax);
+        double derivative = (error - previousError) / dt;
+        double output = clampValue(kp * (error + (runningIntegral / ti) + (td * derivative)), outputMin, outputMax);
+        previousError = error;
         return output;
     }
 
