@@ -1,31 +1,43 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 /**
- * PID Controller: kp * (e + (integral(e) / ti) + (td * derivative(e))).
- * https://en.wikipedia.org/wiki/PID_controller#Ideal_versus_standard_PID_form
+ * This class houses the math behind a PID controller.
+ * To use PID Control with a motor, see the PIDDcMotor class.
  */
 public class PID {
+
+    private double kp;
+    private double ki;
+    private double kd;
+
+    private double integralMin;
+    private double integralMax;
+
+    private double outputMin;
+    private double outputMax;
+
+    private double lastError;
+    private double runningIntegral;
+
     /**
      * Creates a PID Controller.
      * @param kp Proportional factor to scale error to output.
-     * @param ti The number of seconds to eliminate all past errors.
-     * @param td The number of seconds to predict the error in the future.
+     * @param ki The number of seconds to eliminate all past errors.
+     * @param kd The number of seconds to predict the error in the future.
      * @param integralMin The min of the running integral.
      * @param integralMax The max of the running integral.
      * @param outputMin The min of the PID output.
      * @param outputMax The max of the PID output.
      */
-    public PID(double kp, double ti, double td, double integralMin,
-               double integralMax, double outputMin, double outputMax) {
+    public PID(double kp, double ki, double kd, double integralMin, double integralMax, double outputMin, double outputMax) {
         this.kp = kp;
-        this.ti = ti;
-        this.td = td;
+        this.ki = ki;
+        this.kd = kd;
         this.integralMin = integralMin;
         this.integralMax = integralMax;
         this.outputMin = outputMin;
         this.outputMax = outputMax;
-
-        this.previousError = 0;
+        this.lastError = 0;
         this.runningIntegral = 0;
     }
 
@@ -38,11 +50,12 @@ public class PID {
      */
     public double update(double desiredValue, double actualValue, double dt) {
         double error = desiredValue - actualValue;
-        runningIntegral = clampValue(runningIntegral + error * dt, integralMin, integralMax);
-        double derivative = (error - previousError) / dt;
-        double output = clampValue(kp * (error + (runningIntegral / ti) + (td * derivative)), outputMin, outputMax);
-        previousError = error;
-        return output;
+        double p = error * kp;
+        double i = ki * clampValue(error + runningIntegral, integralMin, integralMax);
+        double d = kd * ((error - lastError) / dt);
+        runningIntegral += error;
+        lastError = error;
+        return clampValue(p+i+d, outputMin, outputMax);
     }
 
     /**
@@ -56,23 +69,5 @@ public class PID {
         return Math.min(max, Math.max(min, value));
     }
 
-    // Proportional factor to scale error to output.
-    private double kp;
-    // The number of seconds to eliminate all past errors.
-    private double ti;
-    // The number of seconds to predict the error in the future.
-    private double td;
-    // The min of the running integral.
-    private double integralMin;
-    // The max of the running integral.
-    private double integralMax;
-    // The min allowed PID output.
-    private double outputMin;
-    // The max allowed PID output.
-    private double outputMax;
 
-    // The last error value.
-    private double previousError;
-    // The discrete running integral (bounded by integralMax).
-    private double runningIntegral;
 }

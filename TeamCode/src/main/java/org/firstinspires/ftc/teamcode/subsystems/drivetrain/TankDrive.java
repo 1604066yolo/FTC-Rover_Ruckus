@@ -15,20 +15,19 @@ public class TankDrive implements IDrivetrain {
     private final double gearRatio = 3;
     private final double gearedTicksPerRevolution = ticksPerRevolution * gearRatio;
 
-    private final double drivePidKp = 1;     // Tuning variable for PID.
-    private final double drivePidTi = 1.0;   // Eliminate integral error in 1 sec.
-    private final double drivePidTd = 0.1;   // Account for error in 0.1 sec.
+    private final double kp = 1;
+    private final double ki = 1.0;
+    private final double kd = 0.1;
 
-    // Protect against integral windup by limiting integral term.
-    private final double drivePidIntMax = 1;  // Limit to max speed.
-    private final double driveOutMax = 1.0;  // Motor output limited to 100%.
+    private final double drivePidIntMax = 1;
+    private final double driveOutMax = 1.0;
 
     private double prevTime;
     private int prevLeftEncoderPos;
     private int prevRightEncoderPos;
 
-    private PID leftDrive = null;
-    private PID rightDrive = null;
+    private PID leftDrive;
+    private PID rightDrive;
 
     private List<DcMotor> motors; //r, l
     private IIMU imu;
@@ -43,8 +42,8 @@ public class TankDrive implements IDrivetrain {
         this.telemetry = telemetry;
 
         timer = new ElapsedTime();
-        rightDrive = new PID(drivePidKp, drivePidTi, drivePidTd, -drivePidIntMax, drivePidIntMax, -driveOutMax, driveOutMax);
-        leftDrive = new PID(drivePidKp, drivePidTi, drivePidTd, -drivePidIntMax, drivePidIntMax, -driveOutMax, driveOutMax);
+        rightDrive = new PID(kp, ki, kd, -drivePidIntMax, drivePidIntMax, -driveOutMax, driveOutMax);
+        leftDrive = new PID(kp, ki, kd, -drivePidIntMax, drivePidIntMax, -driveOutMax, driveOutMax);
 
         prevTime = 0;
         prevRightEncoderPos = motors.get(0).getCurrentPosition();
