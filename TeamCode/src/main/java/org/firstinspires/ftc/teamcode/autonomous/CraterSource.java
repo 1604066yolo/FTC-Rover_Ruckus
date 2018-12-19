@@ -41,15 +41,15 @@ public class CraterSource {
         if (xOff < 100) {
             drivetrain.turnLeft(30);
             drivetrain.sleep(200);
-            drivetrain.strafe1("left", 25);
+            drivetrain.strafe("left", 25);
             markerState = 1;
         } else if (xOff > 350) {
             drivetrain.turnRight(41);
-            drivetrain.strafe1("left", 22);
+            drivetrain.strafe("left", 22);
             markerState = 3;
         } else {
             drivetrain.moveBackward(1);
-            drivetrain.strafe1("left", 21);
+            drivetrain.strafe("left", 21);
             markerState = 2;
         }
     }
@@ -63,14 +63,14 @@ public class CraterSource {
             drivetrain.moveBackward(8);
             drivetrain.sleep(200);
         } else if (markerState == 2) {
-            drivetrain.strafe1("right", 12);
+            drivetrain.strafe("right", 12);
             drivetrain.sleep(200);
             drivetrain.moveBackward(35);
             drivetrain.sleep(200);
         } else if (markerState == 3) {
             drivetrain.turnLeft(15);
             drivetrain.sleep(200);
-            drivetrain.strafe1("right",11);
+            drivetrain.strafe("right",11);
             drivetrain.sleep(200);
             drivetrain.moveBackward(65);
             drivetrain.sleep(200);
@@ -79,7 +79,7 @@ public class CraterSource {
 
     public void claiming2(){
         if(markerState == 1){
-            drivetrain.strafe1("right", 40);
+            drivetrain.strafe("right", 40);
             drivetrain.sleep(200);
             drivetrain.marker.setPosition(.9);
         } else if(markerState == 2){
@@ -87,7 +87,7 @@ public class CraterSource {
             drivetrain.sleep(200);
             drivetrain.moveBackward(11);
             drivetrain.sleep(200);
-            drivetrain.strafe1("right", 35);
+            drivetrain.strafe("right", 35);
             drivetrain.sleep(200);
             drivetrain.marker.setPosition(.9);
         } else if(markerState == 3){
@@ -95,16 +95,16 @@ public class CraterSource {
             drivetrain.sleep(200);
             drivetrain.moveBackward(5);
             drivetrain.sleep(200  );
-            drivetrain.strafe1("right",45);
+            drivetrain.strafe("right",45);
             drivetrain.sleep(200);
             drivetrain.marker.setPosition(.9);
         }
         drivetrain.sleep(300);
-        drivetrain.strafe1("left", 4);
+        drivetrain.strafe("left", 4);
     }
 
     public void parking(){
-        drivetrain.strafe1("left", 55);
+        drivetrain.strafe("left", 55);
         drivetrain.sleep(200);
     }
 

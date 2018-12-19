@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.drivetrain;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -98,7 +96,7 @@ public class Drivetrain {
         rp.setPower(0);
         moveBackward(7);
         sleep(300);
-        strafe1("left", 5);
+        strafe("left", 5);
         sleep(300);
         moveForward(5);
     }
@@ -186,7 +184,7 @@ public class Drivetrain {
         backLeft.setPower(0);
     }
 
-    public void strafe1(String direction, double distance){
+    public void strafe(String direction, double distance){
         double mult = 75*0.615;
         double strafe;
         int time = (int)(mult * distance);

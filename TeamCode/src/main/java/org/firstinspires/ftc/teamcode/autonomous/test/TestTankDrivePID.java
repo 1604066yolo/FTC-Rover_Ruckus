@@ -24,11 +24,6 @@ public class TestTankDrivePID extends OpMode {
     private final double outputMax = 1;
     private final double outputMin = -1;
 
-    private final double desiredSpeed = .75;
-
-    private final double drivePidIntMax = 1;  // Limit to max speed.
-    private final double driveOutMax = 1.0;  // Motor output limited to 100%.
-
     private double prevTime;
     private int prevLeftEncoderPos;
     private int prevRightEncoderPos;

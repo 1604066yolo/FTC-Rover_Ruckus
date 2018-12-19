@@ -41,16 +41,16 @@ public class DepotSource {
         if (xOff < 100) {
             drivetrain.turnLeft(40);
             drivetrain.sleep(200);
-            drivetrain.strafe1("left", 22);
+            drivetrain.strafe("left", 22);
             markerState = 1;
         } else if (xOff > 350) {
             drivetrain.moveForward(2);
             drivetrain.sleep(200);
             drivetrain.turnRight(35);
-            drivetrain.strafe1("left", 28);
+            drivetrain.strafe("left", 28);
             markerState = 3;
         } else {
-            drivetrain.strafe1("left", 38);
+            drivetrain.strafe("left", 38);
             markerState = 2;
         }
     }
@@ -71,7 +71,7 @@ public class DepotSource {
 
     public void claiming2(){
         if(markerState == 1){
-            drivetrain.strafe1("right", 25);
+            drivetrain.strafe("right", 25);
             drivetrain.sleep(200);
             drivetrain.marker.setPosition(.9);
             drivetrain.sleep(200);
@@ -83,23 +83,23 @@ public class DepotSource {
             drivetrain.sleep(200);
         }
         else if(markerState == 3){
-            drivetrain.strafe1("right", 20);
+            drivetrain.strafe("right", 20);
             drivetrain.sleep(300);
             drivetrain.marker.setPosition(.9);
             drivetrain.sleep(200);
         }
-        drivetrain.strafe1("left", 6);
+        drivetrain.strafe("left", 6);
         drivetrain.sleep(200);
         drivetrain.marker.setPosition(.9);
         drivetrain.sleep(200);
     }
 
     public void positioning1(){
-        drivetrain.strafe1("left", 6);
+        drivetrain.strafe("left", 6);
         drivetrain.sleep(200);
         drivetrain.marker.setPosition(.5);
         drivetrain.sleep(200);
-        drivetrain.strafe1("right",3);
+        drivetrain.strafe("right",3);
         drivetrain.sleep(200);
         drivetrain.turnRight(30);
         drivetrain.sleep(200);
@@ -124,7 +124,7 @@ public class DepotSource {
     public void allianceSamping(){
         double xOff = drivetrain.detector.getScreenPosition().x;
         if (xOff != 0) {
-            drivetrain.strafe1("left", 5);
+            drivetrain.strafe("left", 5);
         } else {
             drivetrain.moveForward(6);
             drivetrain.sleep(200);
