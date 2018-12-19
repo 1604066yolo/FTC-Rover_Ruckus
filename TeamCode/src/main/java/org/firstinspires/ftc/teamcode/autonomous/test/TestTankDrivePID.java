@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.PID;
+import org.firstinspires.ftc.teamcode.subsystems.MotorControllers.PID;
 
-@Autonomous(group = "test")
+@Autonomous(group = "test", name = "TEST Tank Drive w/ PID")
 public class TestTankDrivePID extends OpMode {
 
     private DcMotor r;
@@ -57,6 +57,9 @@ public class TestTankDrivePID extends OpMode {
 
         r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftDrive = new PID(kp, ki, kd, intMin, intMax, outputMin, outputMax);
+        rightDrive = new PID(kp, ki, kd, intMin, intMax, outputMin, outputMax);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.PID;
+import org.firstinspires.ftc.teamcode.subsystems.MotorControllers.PID;
 
 public class TestPID extends OpMode {
 

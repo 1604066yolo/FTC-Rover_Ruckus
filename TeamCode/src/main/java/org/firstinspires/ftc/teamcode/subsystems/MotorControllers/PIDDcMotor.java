@@ -1,7 +1,10 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.MotorControllers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.subsystems.MotorControllers.EncoderDcMotor;
+import org.firstinspires.ftc.teamcode.subsystems.MotorControllers.PID;
 
 /**
  * This class acts as a wrapper for a DcMotor that you wish to control with PID.
