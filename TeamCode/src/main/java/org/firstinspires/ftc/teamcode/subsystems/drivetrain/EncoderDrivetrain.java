@@ -32,10 +32,7 @@ public class EncoderDrivetrain extends Drivetrain {
         super.initParts();
         super.initDetector();
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        timer = new ElapsedTime();
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -132,6 +129,10 @@ public class EncoderDrivetrain extends Drivetrain {
     }
 
     private void startMotors(double speed) {
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontRight.setPower(-speed);
         frontLeft.setPower(speed);
         backRight.setPower(-speed);
