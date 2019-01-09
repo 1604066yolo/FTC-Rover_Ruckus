@@ -18,20 +18,34 @@ public class MecanumDriveEncoderTest extends OpMode {
 
     public void loop() {
         drivetrain.print("step: ", step);
-        if (step == 0) {
-            drivetrain.moveForward(20, .75);
+        telemetry.addData("frontRight", drivetrain.frontRight.getCurrentPosition());
+        telemetry.addData("frontLeft", drivetrain.frontLeft.getCurrentPosition());
+        telemetry.addData("backRight", drivetrain.backRight.getCurrentPosition());
+        telemetry.addData("backLeft", drivetrain.backLeft.getCurrentPosition());
+        telemetry.update();
+        /*if (step == 0) {
+            drivetrain.strafe("left", 20, .3);
             drivetrain.sleep(1000);
             step++;
         } else if (step == 1) {
-            drivetrain.moveBackward(20, .75);
+            drivetrain.strafe("right", 20, .3);
+            drivetrain.sleep(1000);
+            step++;
+        }*/
+        if (step == 0) {
+            drivetrain.moveForward(20, .5);
+            drivetrain.sleep(1000);
+            step++;
+        } else if (step == 1) {
+            drivetrain.moveBackward(20, .5);
             drivetrain.sleep(1000);
             step++;
         } else if (step == 2) {
-            drivetrain.turnLeft(90, .75);
+            drivetrain.turnLeft(90, .5);
             drivetrain.sleep(1000);
             step++;
         } else if (step == 3) {
-            drivetrain.turnRight(90, .75);
+            drivetrain.turnRight(90, .5);
             drivetrain.sleep(1000);
             step++;
         } else {

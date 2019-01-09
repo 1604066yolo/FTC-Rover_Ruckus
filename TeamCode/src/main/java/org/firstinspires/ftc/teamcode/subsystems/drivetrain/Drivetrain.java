@@ -16,16 +16,16 @@ import org.firstinspires.ftc.teamcode.subsystems.vision.GoldMineralDetector;
 public class Drivetrain {
 
     HardwareMap hardwareMap;
-    Telemetry telemetry;
+    public Telemetry telemetry;
     Gamepad gamepad1;
     Gamepad gamepad2;
 
 
     public Servo marker;
     public Servo box;
+    public Servo spindle;
 
-    public DcMotor extender;
-    public DcMotor flipper;
+    public DcMotor lFlip, rFlip, extend;
 
     public DcMotor frontLeft;
     public DcMotor backLeft;
@@ -50,22 +50,25 @@ public class Drivetrain {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //winch = hardwareMap.dcMotor.get("spindle");
         marker = hardwareMap.servo.get("marker");
-        //flipper = hardwareMap.dcMotor.get("flipper");
-        //extender = hardwareMap.dcMotor.get("extender");
 
-        //box = hardwareMap.servo.get("box");
+        lFlip = hardwareMap.dcMotor.get("lFlip");
+        rFlip = hardwareMap.dcMotor.get("rFlip");
+        extend = hardwareMap.dcMotor.get("extend");
+
+        lFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        box = hardwareMap.servo.get("box");
+        spindle = hardwareMap.servo.get("spindle");
 
         imu = new BoschIMU(hardwareMap.get(BNO055IMU.class, "imu"));
         imu.init();
 
         rp = hardwareMap.dcMotor.get("rp");
         rp.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void initDetector() {

@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
 @Autonomous
+@Disabled
 public class CraterAuton extends OpMode {
 
     CraterSource craterSource;

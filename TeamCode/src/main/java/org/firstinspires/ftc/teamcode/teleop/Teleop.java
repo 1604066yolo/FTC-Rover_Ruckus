@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
@@ -18,6 +19,8 @@ public class Teleop extends OpMode {
     public void init() {
         drivetrain = new Drivetrain(hardwareMap, gamepad1, gamepad2, telemetry);
         drivetrain.initParts();
+        drivetrain.frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        drivetrain.backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     int div = 1;
@@ -68,22 +71,22 @@ public class Teleop extends OpMode {
         }
 
 
-        /*if (gamepad2.x)
-            drivetrain.contServo.setPosition(1);
+        if (gamepad2.x)
+            drivetrain.box.setPosition(1);
         else if (gamepad2.y)
-            drivetrain.contServo.setPosition(-1);
+            drivetrain.box.setPosition(-1);
         else
-            drivetrain.contServo.setPosition(0.53);
+            drivetrain.box.setPosition(0.53);
 
         if(gamepad2.a)
-            drivetrain.winch.setPower(0.5);
+            drivetrain.spindle.setPosition(1);
         else if(gamepad2.b)
-            drivetrain.winch.setPower(-0.5);
+            drivetrain.spindle.setPosition(-1);
         else
-            drivetrain.winch.setPower(0);*/
+            drivetrain.spindle.setPosition(0.5);
 
-        //
-        // drivetrain.spindle.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
+
+         //drivetrain.spindle.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
 
         if (gamepad2.dpad_up) {
             drivetrain.rp.setPower(-1);
@@ -98,23 +101,9 @@ public class Teleop extends OpMode {
             rpFlag = false;
         }
 
-        if(gamepad2.right_bumper){
-            drivetrain.extender.setPower(1);
-        }
-        else if(gamepad2.left_bumper){
-            drivetrain.extender.setPower(-1);
-        } else {
-            drivetrain.extender.setPower(0);
-        }
-
-        if(gamepad2.x) {
-            drivetrain.flipper.setPower(1);
-        }
-        else if(gamepad2.b){
-            drivetrain.flipper.setPower(-1);
-        } else {
-            drivetrain.flipper.setPower(0);
-        }
+        drivetrain.lFlip.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+        drivetrain.rFlip.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+        drivetrain.extend.setPower(gamepad2.right_bumper ? 1 : gamepad2.left_bumper ? -1 : 0);
 
 
     }

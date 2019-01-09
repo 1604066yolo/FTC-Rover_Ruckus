@@ -69,5 +69,8 @@ public class PID {
         return Math.min(max, Math.max(min, value));
     }
 
+    public void setOutputBounds(double min, double max) {
+        outputMin = min; outputMax = max;
+    }
 
 }

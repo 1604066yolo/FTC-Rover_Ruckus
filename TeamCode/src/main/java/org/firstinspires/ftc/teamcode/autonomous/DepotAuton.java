@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.ftdi.eeprom.FT_EEPROM_232H;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
 @Autonomous
+@Disabled
 public class DepotAuton extends OpMode {
 
     DepotSource depotSource;
