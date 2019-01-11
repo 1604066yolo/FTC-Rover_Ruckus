@@ -26,7 +26,7 @@ public class NirvanaDepotAuton extends OpMode{
             step++;
         } else if (step == 1) {
             drivetrain.moveForward(105, .3);
-            drivetrain.strafe("right", 3, .3);
+            drivetrain.strafeRight(3, .3);
             drivetrain.moveBackward(105, .3);
             step++;
         } else if(step == 2){
@@ -42,16 +42,16 @@ public class NirvanaDepotAuton extends OpMode{
             if (xOff < 100) {
                 drivetrain.turnLeft(40, .3);
                 drivetrain.sleep(200);
-                drivetrain.strafe("left", 122, .3);
+                drivetrain.strafeLeft(122, .3);
                 markerState = 1;
             } else if (xOff > 350) {
                 drivetrain.moveForward(2, .3);
                 drivetrain.sleep(200);
                 drivetrain.turnRight(35, .3);
-                drivetrain.strafe("left", 128, .3);
+                drivetrain.strafeLeft(128, .3);
                 markerState = 3;
             } else {
-                drivetrain.strafe("left", 138, .3);
+                drivetrain.strafeLeft(138, .3);
                 markerState = 2;
             }
             step++;
@@ -70,7 +70,7 @@ public class NirvanaDepotAuton extends OpMode{
             step++;
         } else if(step == 5){
             if(markerState == 1){
-                drivetrain.strafe("right", 125, .3);
+                drivetrain.strafeRight(125, .3);
                 drivetrain.sleep(200);
                 drivetrain.marker.setPosition(.9);
                 drivetrain.sleep(200);
@@ -82,12 +82,12 @@ public class NirvanaDepotAuton extends OpMode{
                 drivetrain.sleep(200);
             }
             else if(markerState == 3){
-                drivetrain.strafe("right", 120, .3);
+                drivetrain.strafeRight(120, .3);
                 drivetrain.sleep(300);
                 drivetrain.marker.setPosition(.9);
                 drivetrain.sleep(200);
             }
-            drivetrain.strafe("left", 106, .3);
+            drivetrain.strafeLeft(106, .3);
             drivetrain.sleep(200);
             drivetrain.marker.setPosition(.9);
             drivetrain.sleep(200);
