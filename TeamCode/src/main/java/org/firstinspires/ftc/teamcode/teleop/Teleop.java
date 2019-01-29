@@ -29,17 +29,17 @@ public class Teleop extends OpMode {
 
     public void loop() {
 
-      /* double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+       double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-       double rightX = gamepad1.right_stick_x;
+       double rightX = -gamepad1.right_stick_x;
        final double v1 = r * Math.cos(robotAngle) + rightX;
        final double v2 = r * Math.sin(robotAngle) - rightX;
        final double v3 = r * Math.sin(robotAngle) + rightX;
        final double v4 = r * Math.cos(robotAngle) - rightX;
-       frontLeft.setPower(v2/div);
-       frontRight.setPower(v1/div);
-       backLeft.setPower(v4/div);
-       backRight.setPower(v3/div);     ok this is vvvvvvv epic */
+       drivetrain.frontLeft.setPower(v2/div);
+       drivetrain.frontRight.setPower(v1/div);
+       drivetrain.backLeft.setPower(v4/div);
+       drivetrain.backRight.setPower(v3/div);
 
         drive = -gamepad1.left_stick_y;
         strafe = gamepad1.left_stick_x;
@@ -49,10 +49,10 @@ public class Teleop extends OpMode {
         telemetry.addData("rotate number", gamepad1.right_stick_x);
 
 
-        drivetrain.frontLeft.setPower((drive + strafe + rotate) / div);
+        /*drivetrain.frontLeft.setPower((drive + strafe + rotate) / div);
         drivetrain.backLeft.setPower((drive - strafe+ rotate) / div);
         drivetrain.frontRight.setPower((drive - strafe - rotate) / div);
-        drivetrain.backRight.setPower((drive + strafe - rotate) / div);
+        drivetrain.backRight.setPower((drive + strafe - rotate) / div);*/
 
 
 
@@ -71,39 +71,33 @@ public class Teleop extends OpMode {
         }
 
 
-        if (gamepad2.x)
+        /*if (gamepad2.x)
             drivetrain.box.setPosition(1);
         else if (gamepad2.y)
             drivetrain.box.setPosition(-1);
         else
             drivetrain.box.setPosition(0.53);
 
-        if(gamepad2.a)
+        if(gamepad1.a)
             drivetrain.spindle.setPosition(1);
         else if(gamepad2.b)
             drivetrain.spindle.setPosition(-1);
         else
-            drivetrain.spindle.setPosition(0.5);
+            drivetrain.spindle.setPosition(0.5);*/
 
 
          //drivetrain.spindle.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
 
-        if (gamepad2.dpad_up) {
+        if (gamepad1.dpad_up)
             drivetrain.rp.setPower(-1);
-            rpFlag = true;
-        }
-        else if (gamepad2.dpad_down) {
+        else if (gamepad1.dpad_down)
             drivetrain.rp.setPower(1);
-            rpFlag = true;
-        }
-        else if (rpFlag) {
+        else
             drivetrain.rp.setPower(0);
-            rpFlag = false;
-        }
 
-        drivetrain.lFlip.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+        /*drivetrain.lFlip.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
         drivetrain.rFlip.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-        drivetrain.extend.setPower(gamepad2.right_bumper ? 1 : gamepad2.left_bumper ? -1 : 0);
+        drivetrain.extend.setPower(gamepad1.right_bumper ? 1 : gamepad1.left_bumper ? -1 : 0);*/
 
 
     }

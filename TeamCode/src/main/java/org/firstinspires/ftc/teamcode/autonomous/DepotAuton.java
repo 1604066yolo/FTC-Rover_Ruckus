@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.internal.ftdi.eeprom.FT_EEPROM_232H;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 
 @Autonomous
-@Disabled
 public class DepotAuton extends OpMode {
 
     DepotSource depotSource;
@@ -31,13 +30,10 @@ public class DepotAuton extends OpMode {
             depotSource.gyroPositioning();
             step++;
         } else if (step == 2) {
-            depotSource.sampling();
+            depotSource.sampleMiddle();
             step++;
         } else if (step == 3){
-            depotSource.claiming1();
-            step++;
-        } else if(step == 4){
-            depotSource.claiming2();
+            depotSource.claimMiddle();
             step++;
         } else {
             depotSource.stopMotors();

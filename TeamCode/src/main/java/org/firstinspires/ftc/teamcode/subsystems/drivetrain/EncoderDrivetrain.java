@@ -15,14 +15,16 @@ public class EncoderDrivetrain extends Drivetrain {
 
     private PID fl, bl, fr, br;
 
-    private final double kp = 1;
-    private final double ki = 1;
-    private final double kd = 1;
+    private final double kp = .01d;
+    private final double ki = .05d;
+    private final double kd = .03d;
     private final double intMax = 1;
     private final double intMin = 0;
     private final double outputMax = 1;
     private final double outputMin = -1;
     private final double endTolerance = 50;
+
+    private double frLastEnc, flLastEnc, brLastEnc, blLastEnc;
 
     private final double TICKS_PER_ROTATION = 1440;
     private final double GEAR_RATIO = 2;
@@ -69,15 +71,15 @@ public class EncoderDrivetrain extends Drivetrain {
         backRight.setTargetPosition(ticks);
         backLeft.setTargetPosition(ticks);*/
         int ticks = (int) convert(inches);
-        zeroEncoders();
+        //zeroEncoders();
         timer.reset();
         setSetpoint(-speed, speed);
         frontRight.setPower(speed);
         frontLeft.setPower(speed);
         backRight.setPower(speed);
         backLeft.setPower(speed);
-        while (frontRight.getCurrentPosition() < ticks && frontLeft.getCurrentPosition() < ticks
-                && backRight.getCurrentPosition() < ticks && backLeft.getCurrentPosition() < ticks) {
+        while (frontRight.getCurrentPosition() < ticks + frLastEnc && frontLeft.getCurrentPosition() < ticks + flLastEnc
+                && backRight.getCurrentPosition() < ticks + brLastEnc && backLeft.getCurrentPosition() < ticks + blLastEnc) {
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             telemetry.addData("backRight", backRight.getCurrentPosition());
@@ -92,6 +94,7 @@ public class EncoderDrivetrain extends Drivetrain {
 
             if (timer.milliseconds() > 4000) break;
         }
+        updateLastEnc();
         stopMotors();
     }
 
@@ -101,15 +104,15 @@ public class EncoderDrivetrain extends Drivetrain {
         backRight.setTargetPosition(-ticks);
         backLeft.setTargetPosition(-ticks);*/
         int ticks = (int) convert(inches);
-        zeroEncoders();
+        //zeroEncoders();
         timer.reset();
         setSetpoint(-speed, speed);
         frontRight.setPower(-speed);
         frontLeft.setPower(-speed);
         backRight.setPower(-speed);
         backLeft.setPower(-speed);
-        while (frontRight.getCurrentPosition() > -ticks && frontLeft.getCurrentPosition() > -ticks
-                && backRight.getCurrentPosition() > -ticks && backLeft.getCurrentPosition() > -ticks) {
+        while (frontRight.getCurrentPosition() > -ticks + frLastEnc && frontLeft.getCurrentPosition() > -ticks + flLastEnc
+                && backRight.getCurrentPosition() > -ticks + brLastEnc && backLeft.getCurrentPosition() > -ticks + blLastEnc) {
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             telemetry.addData("backRight", backRight.getCurrentPosition());
@@ -125,6 +128,7 @@ public class EncoderDrivetrain extends Drivetrain {
             if (timer.milliseconds() > 4000) break;
         }
         stopMotors();
+        updateLastEnc();
     }
 
     public void turnLeft(int degrees, double speed) {
@@ -134,15 +138,15 @@ public class EncoderDrivetrain extends Drivetrain {
         backLeft.setTargetPosition(-ticks);*/
         double mult = 14d;
         int ticks = (int) convert(mult * Math.toRadians(degrees));
-        zeroEncoders();
+        //zeroEncoders();
         timer.reset();
         setSetpoint(-speed, speed);
         frontRight.setPower(speed);
         frontLeft.setPower(-speed);
         backRight.setPower(speed);
         backLeft.setPower(-speed);
-        while (frontRight.getCurrentPosition() < ticks && frontLeft.getCurrentPosition() > -ticks
-                && backRight.getCurrentPosition() < ticks && backLeft.getCurrentPosition() > -ticks) {
+        while (frontRight.getCurrentPosition() < ticks + frLastEnc && frontLeft.getCurrentPosition() > -ticks + flLastEnc
+                && backRight.getCurrentPosition() < ticks + brLastEnc && backLeft.getCurrentPosition() > -ticks + blLastEnc) {
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             telemetry.addData("backRight", backRight.getCurrentPosition());
@@ -158,20 +162,21 @@ public class EncoderDrivetrain extends Drivetrain {
             if (timer.milliseconds() > 4000) break;
         }
         stopMotors();
+        updateLastEnc();
     }
 
     public void turnRight(int degrees, double speed) {
         double mult = 14d;
         int ticks = (int) convert(mult * Math.toRadians(degrees));
-        zeroEncoders();
+        //zeroEncoders();
         timer.reset();
         setSetpoint(-speed, speed);
         frontRight.setPower(-speed);
         frontLeft.setPower(speed);
         backRight.setPower(-speed);
         backLeft.setPower(speed);
-        while (frontRight.getCurrentPosition() > -ticks && frontLeft.getCurrentPosition() < ticks
-                && backRight.getCurrentPosition() > -ticks && backLeft.getCurrentPosition() < ticks) {
+        while (frontRight.getCurrentPosition() > -ticks + frLastEnc && frontLeft.getCurrentPosition() < ticks + flLastEnc
+                && backRight.getCurrentPosition() > -ticks + brLastEnc && backLeft.getCurrentPosition() < ticks + blLastEnc) {
             telemetry.addData("frontRight", frontRight.getCurrentPosition());
             telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             telemetry.addData("backRight", backRight.getCurrentPosition());
@@ -187,47 +192,59 @@ public class EncoderDrivetrain extends Drivetrain {
             if (timer.milliseconds() > 4000) break;
         }
         stopMotors();
+        updateLastEnc();
     }
 
     public void strafeLeft(double inches, double speed) {
         int ticks = (int) convert(inches);
         timer.reset();
-        zeroEncoders();
+        //zeroEncoders();
         setSetpoint(-speed, speed);
         /*frontRight.setTargetPosition(ticks);
         frontLeft.setTargetPosition(-ticks);
         backRight.setTargetPosition(-ticks);
         backLeft.setTargetPosition(ticks);*/
-        while (frontRight.getCurrentPosition() < ticks && frontLeft.getCurrentPosition() > -ticks
-                && backRight.getCurrentPosition() > -ticks && backLeft.getCurrentPosition() < ticks) {
-            frPID.update(ticks, frontRight.getCurrentPosition(), 50);
-            flPID.update(-ticks, frontLeft.getCurrentPosition(), 50);
-            brPID.update(-ticks, backRight.getCurrentPosition(), 50);
-            blPID.update(ticks, backLeft.getCurrentPosition(), 50);
+        frontRight.setPower(speed);
+        frontLeft.setPower(-speed);
+        backRight.setPower(-speed);
+        backLeft.setPower(speed);
+        while (frontRight.getCurrentPosition() < ticks + frLastEnc && frontLeft.getCurrentPosition() > -ticks + flLastEnc
+                && backRight.getCurrentPosition() > -ticks + brLastEnc && backLeft.getCurrentPosition() < ticks + blLastEnc) {
+            /*frontRight.setPower(frPID.update(ticks, frontRight.getCurrentPosition(), 50));
+            frontLeft.setPower(flPID.update(-ticks, frontLeft.getCurrentPosition(), 50));
+            backRight.setPower(brPID.update(-ticks, backRight.getCurrentPosition(), 50));
+            backLeft.setPower(blPID.update(ticks, backLeft.getCurrentPosition(), 50));*/
 
             if (timer.milliseconds() > 4500) break;
         }
         stopMotors();
+        updateLastEnc();
     }
 
     public void strafeRight (double inches, double speed) {
         int ticks = (int) convert(inches);
         timer.reset();
-        zeroEncoders();
+        //zeroEncoders();
         setSetpoint(-speed, speed);
         /*frontRight.setTargetPosition(-ticks);
         frontLeft.setTargetPosition(ticks);
         backRight.setTargetPosition(ticks);
         backLeft.setTargetPosition(-ticks);*/
-        while(frontRight.getCurrentPosition() > -ticks && frontLeft.getCurrentPosition() < ticks
-                && backRight.getCurrentPosition() < ticks && backLeft.getCurrentPosition() > -ticks){
-            frPID.update(-ticks, frontRight.getCurrentPosition(), 50);
-            flPID.update(ticks, frontLeft.getCurrentPosition(), 50);
-            brPID.update(ticks, backRight.getCurrentPosition(), 50);
-            blPID.update(-ticks, backLeft.getCurrentPosition(), 50);
+        frontRight.setPower(-speed);
+        frontLeft.setPower(speed);
+        backRight.setPower(speed);
+        backLeft.setPower(-speed);
+        while(frontRight.getCurrentPosition() > -ticks + frLastEnc && frontLeft.getCurrentPosition() < ticks + flLastEnc
+                && backRight.getCurrentPosition() < ticks + brLastEnc && backLeft.getCurrentPosition() > -ticks + blLastEnc){
+            /*frontRight.setPower(frPID.update(-ticks, frontRight.getCurrentPosition(), 50));
+            frontLeft.setPower(flPID.update(ticks, frontLeft.getCurrentPosition(), 50));
+            backRight.setPower(brPID.update(ticks, backRight.getCurrentPosition(), 50));
+            backLeft.setPower(blPID.update(-ticks, backLeft.getCurrentPosition(), 50));*/
 
             if (timer.milliseconds() > 4500) break;
         }
+        stopMotors();
+        updateLastEnc();
     }
 
     private void zeroEncoders() {
@@ -242,6 +259,13 @@ public class EncoderDrivetrain extends Drivetrain {
         flPID.setOutputBounds(min, max);
         brPID.setOutputBounds(min, max);
         blPID.setOutputBounds(min, max);
+    }
+
+    public void updateLastEnc() {
+        frLastEnc = frontRight.getCurrentPosition();
+        flLastEnc = frontLeft.getCurrentPosition();
+        brLastEnc = backRight.getCurrentPosition();
+        blLastEnc = backLeft.getCurrentPosition();
     }
 
 }

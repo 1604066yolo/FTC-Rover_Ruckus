@@ -22,10 +22,10 @@ public class Drivetrain {
 
 
     public Servo marker;
-    public Servo box;
-    public Servo spindle;
+    /*public Servo box;
+    public Servo spindle;*/
 
-    public DcMotor lFlip, rFlip, extend;
+   /* public DcMotor lFlip, rFlip, extend;*/
 
     public DcMotor frontLeft;
     public DcMotor backLeft;
@@ -51,9 +51,10 @@ public class Drivetrain {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+
         marker = hardwareMap.servo.get("marker");
 
-        lFlip = hardwareMap.dcMotor.get("lFlip");
+        /*lFlip = hardwareMap.dcMotor.get("lFlip");
         rFlip = hardwareMap.dcMotor.get("rFlip");
         extend = hardwareMap.dcMotor.get("extend");
 
@@ -62,7 +63,7 @@ public class Drivetrain {
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         box = hardwareMap.servo.get("box");
-        spindle = hardwareMap.servo.get("spindle");
+        spindle = hardwareMap.servo.get("spindle");*/
 
         imu = new BoschIMU(hardwareMap.get(BNO055IMU.class, "imu"));
         imu.init();
@@ -97,11 +98,13 @@ public class Drivetrain {
         rp.setPower(-1);
         sleep(1250);
         rp.setPower(0);
-        moveBackward(7);
-        sleep(300);
-        strafe("left", 5);
-        sleep(300);
-        moveForward(5);
+        marker.setPosition(.5);
+        sleep(200);
+        moveBackward(8);
+        sleep(200);
+        strafe("left",20);
+        moveForward(10);
+        sleep(200);
     }
 
     public void bringRPDown() {
@@ -192,10 +195,10 @@ public class Drivetrain {
         double strafe;
         int time = (int)(mult * distance);
         if(direction.equals("left")){
-            strafe = -.5;
+            strafe = -.7;
         }
         else{
-            strafe = .5;
+            strafe = .7;
         }
         frontLeft.setPower(-strafe);
         backLeft.setPower(strafe);

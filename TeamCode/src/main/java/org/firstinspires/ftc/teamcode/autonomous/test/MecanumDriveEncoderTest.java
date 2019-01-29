@@ -24,15 +24,6 @@ public class MecanumDriveEncoderTest extends OpMode {
         telemetry.addData("backLeft", drivetrain.backLeft.getCurrentPosition());
         telemetry.update();
         /*if (step == 0) {
-            drivetrain.strafe("left", 20, .3);
-            drivetrain.sleep(1000);
-            step++;
-        } else if (step == 1) {
-            drivetrain.strafe("right", 20, .3);
-            drivetrain.sleep(1000);
-            step++;
-        }*/
-        if (step == 0) {
             drivetrain.moveForward(20, .5);
             drivetrain.sleep(1000);
             step++;
@@ -48,9 +39,17 @@ public class MecanumDriveEncoderTest extends OpMode {
             drivetrain.turnRight(90, .5);
             drivetrain.sleep(1000);
             step++;
-        } else {
+        } else if (step == 4) {
+            drivetrain.strafe("left", .6);
+            drivetrain.sleep(1000);
+            step++;
+        } else if (step == 5) {
+            drivetrain.strafe("right", .6);
+            drivetrain.sleep(1000);
+            step++;
+        }else {
             drivetrain.stopMotors();
-        }
+        }*/
     }
 
     public void stop() {
