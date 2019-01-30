@@ -22,10 +22,6 @@ public class Drivetrain {
 
 
     public Servo marker;
-    /*public Servo box;
-    public Servo spindle;*/
-
-   /* public DcMotor lFlip, rFlip, extend;*/
 
     public DcMotor frontLeft;
     public DcMotor backLeft;
@@ -53,17 +49,6 @@ public class Drivetrain {
 
 
         marker = hardwareMap.servo.get("marker");
-
-        /*lFlip = hardwareMap.dcMotor.get("lFlip");
-        rFlip = hardwareMap.dcMotor.get("rFlip");
-        extend = hardwareMap.dcMotor.get("extend");
-
-        lFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rFlip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        box = hardwareMap.servo.get("box");
-        spindle = hardwareMap.servo.get("spindle");*/
 
         imu = new BoschIMU(hardwareMap.get(BNO055IMU.class, "imu"));
         imu.init();
