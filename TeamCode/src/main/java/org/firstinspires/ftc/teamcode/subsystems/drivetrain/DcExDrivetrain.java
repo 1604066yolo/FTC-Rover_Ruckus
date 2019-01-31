@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,7 +19,9 @@ import org.firstinspires.ftc.teamcode.util.Util;
 
 public class DcExDrivetrain {
 
-    private static final int END_TOLERANCE = 30;
+    private static final int END_TOLERANCE = 150;
+
+    private static final double kp = .01, ki = .05, kd = .03;
 
     private final double TICKS_PER_ROTATION = 1440;
     private final double GEAR_RATIO = 2;
@@ -47,10 +51,7 @@ public class DcExDrivetrain {
         this.gamepad2 = gamepad2;
 
         rp = hardwareMap.dcMotor.get("rp");
-        frontLeft = (DcMotorEx) hardwareMap.dcMotor.get("frontLeft");
-        frontRight = (DcMotorEx) hardwareMap.dcMotor.get("frontRight");
-        backLeft = (DcMotorEx) hardwareMap.dcMotor.get("backLeft");
-        backRight = (DcMotorEx) hardwareMap.dcMotor.get("backRight");
+
         marker = hardwareMap.servo.get("marker");
 
         imu = new BoschIMU(hardwareMap.get(BNO055IMU.class, "imu"));
@@ -59,6 +60,11 @@ public class DcExDrivetrain {
     }
 
     public void initDrivetrain() {
+        frontLeft = (DcMotorEx) hardwareMap.dcMotor.get("frontLeft");
+        backLeft = (DcMotorEx) hardwareMap.dcMotor.get("frontRight");
+        frontRight = (DcMotorEx) hardwareMap.dcMotor.get("backLeft");
+        backRight = (DcMotorEx) hardwareMap.dcMotor.get("backRight");
+
         rp.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -75,14 +81,16 @@ public class DcExDrivetrain {
         frontRight.setTargetPositionTolerance(END_TOLERANCE);
         backRight.setTargetPositionTolerance(END_TOLERANCE);
 
+        resetEncoders();
+
         imu.init();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        detector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
     }
 
-    public boolean moveForward(double inches, int speed) {
+    public boolean strafeRight(double inches, int speed) {
         int ticks = (int) convert(inches);
-        setWheelTargets(new int[] {ticks + flLastEnc, ticks + blLastEnc, ticks + frLastEnc, ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {ticks + flLastEnc, ticks + blLastEnc, -ticks + frLastEnc, -ticks + brLastEnc},
+                new int[] {speed, speed, -speed, -speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -90,9 +98,10 @@ public class DcExDrivetrain {
         return false;
     }
 
-    public boolean moveBackward(double inches, int speed) {
+    public boolean strafeLeft(double inches, int speed) {
         int ticks = (int) convert(inches);
-        setWheelTargets(new int[] {-ticks + flLastEnc, -ticks + blLastEnc, -ticks + frLastEnc, -ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {-ticks + flLastEnc, -ticks + blLastEnc, ticks + frLastEnc, ticks + brLastEnc},
+                new int[] {-speed, -speed, speed, speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -103,7 +112,8 @@ public class DcExDrivetrain {
     public boolean turnLeft(double degrees, int speed) {
         double mult = 14d;
         int ticks = (int) convert(mult * Math.toRadians(degrees));
-        setWheelTargets(new int[] {-ticks + flLastEnc, -ticks + blLastEnc, ticks + frLastEnc, ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {-ticks + flLastEnc, -ticks + blLastEnc, -ticks + frLastEnc, -ticks + brLastEnc},
+                new int[] {-speed, -speed, -speed, -speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -114,7 +124,8 @@ public class DcExDrivetrain {
     public boolean turnRight(double degrees, int speed) {
         double mult = 14d;
         int ticks = (int) convert(mult * Math.toRadians(degrees));
-        setWheelTargets(new int[] {ticks + flLastEnc, ticks + blLastEnc, -ticks + frLastEnc, -ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {ticks + flLastEnc, ticks + blLastEnc, ticks + frLastEnc, ticks + brLastEnc},
+                new int[] {speed, speed, speed, speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -122,9 +133,10 @@ public class DcExDrivetrain {
         return false;
     }
 
-    public boolean strafeLeft(double inches, int speed) {
+    public boolean moveBackward(double inches, int speed) {
         int ticks = (int) convert(inches);
-        setWheelTargets(new int[] {-ticks + flLastEnc, ticks + blLastEnc, ticks + frLastEnc, -ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {-ticks + flLastEnc, ticks + blLastEnc, -ticks + frLastEnc, ticks + brLastEnc},
+                new int[] {-speed, speed, -speed, speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -132,9 +144,10 @@ public class DcExDrivetrain {
         return false;
     }
 
-    public boolean strafeRight(double inches, int speed) {
+    public boolean moveForward(double inches, int speed) {
         int ticks = (int) convert(inches);
-        setWheelTargets(new int[] {ticks + flLastEnc, -ticks + blLastEnc, -ticks + frLastEnc, ticks + brLastEnc}, speed);
+        setWheelTargets(new int[] {ticks + flLastEnc, -ticks + blLastEnc, ticks + frLastEnc, -ticks + brLastEnc},
+                new int[] {speed, -speed, speed, -speed});
         if (wheelsAtEndPos()) {
             updateLastEncCount();
             return true;
@@ -146,16 +159,16 @@ public class DcExDrivetrain {
      * Sets the target positions of all the wheel motors and starts them at a desired speed
      * @param t the target positions in order: FL, BL, FR, BR
      */
-    private void setWheelTargets(int[] t, int v) {
+    private void setWheelTargets(int[] t, int[] v) {
         frontLeft.setTargetPosition(t[0]);
         backLeft.setTargetPosition(t[1]);
         frontRight.setTargetPosition(t[2]);
         backRight.setTargetPosition(t[3]);
 
-        frontLeft.setVelocity(v);
-        backLeft.setVelocity(v);
-        frontRight.setVelocity(v);
-        backRight.setVelocity(v);
+        frontLeft.setVelocity(v[0]);
+        backLeft.setVelocity(v[1]);
+        frontRight.setVelocity(v[2]);
+        backRight.setVelocity(v[3]);
 
         frontLeft.setMotorEnable();
         backLeft.setMotorEnable();
@@ -169,7 +182,7 @@ public class DcExDrivetrain {
         if (Util.inRange(frontLeft.getCurrentPosition(), frontLeft.getTargetPosition() - END_TOLERANCE,
                 frontLeft.getTargetPosition() + END_TOLERANCE)) {
             frontLeft.setMotorDisable();
-
+            count++;
         }
         if (Util.inRange(backLeft.getCurrentPosition(), backLeft.getTargetPosition() - END_TOLERANCE,
                 backLeft.getTargetPosition() + END_TOLERANCE)) {
@@ -251,6 +264,13 @@ public class DcExDrivetrain {
         sleep(200);*/
     }
 
+    public void resetEncoders() {
+        flLastEnc = frontLeft.getCurrentPosition();
+        blLastEnc = backLeft.getCurrentPosition();
+        frLastEnc = frontRight.getCurrentPosition();
+        brLastEnc = backRight.getCurrentPosition();
+    }
+
     public void bringRPDown() {
         rp.setPower(1);
         sleep(1250);
@@ -268,5 +288,7 @@ public class DcExDrivetrain {
     public GoldMineralDetector getDetector() {
         return detector;
     }
+
+
 
 }

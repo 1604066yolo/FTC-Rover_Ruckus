@@ -7,7 +7,7 @@ public class Util {
     }
 
     public static boolean inRange(double val, double a, double b) {
-        return val > a && val < b || val > b && val < b;
+        return val > a && val < b || val > b && val < a;
     }
 
 }

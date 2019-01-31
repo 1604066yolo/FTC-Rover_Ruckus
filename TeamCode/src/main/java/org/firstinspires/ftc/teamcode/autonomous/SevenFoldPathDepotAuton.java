@@ -11,6 +11,7 @@ public class SevenFoldPathDepotAuton extends LinearOpMode {
     private DcExDrivetrain drivetrain;
 
     private boolean isFound = false;
+    private int markerState = -1;
 
     @Override
     public void runOpMode() {
@@ -41,21 +42,23 @@ public class SevenFoldPathDepotAuton extends LinearOpMode {
         sleep(200);
 
         //strafe to minerals
-        while (!drivetrain.strafeLeft(15, 1000) && opModeIsActive());
+        while (!drivetrain.strafeLeft(22, 1000) && opModeIsActive());
 
         //check middle mineral
         if (!isFound)
             sleep(1000);
         isFound = drivetrain.isFound();
+        if (isFound) markerState = markerState == -1 ? 2 : markerState;
+
 
         //move to left mineral
         while (!isFound && !drivetrain.moveBackward(15, 1000) && opModeIsActive());
 
-        //check back mineral
+        //check left mineral
         if (!isFound)
             sleep(1000);
         isFound |= drivetrain.isFound();
-
+        if (isFound) markerState = markerState == -1 ? 1 : markerState;
         //move to right mineral
         while (!isFound && !drivetrain.moveForward(30, 1000) && opModeIsActive());
 
@@ -63,20 +66,29 @@ public class SevenFoldPathDepotAuton extends LinearOpMode {
         if (!isFound)
             sleep(1000);
         isFound |= drivetrain.isFound();
-
+        if (isFound) markerState = markerState == -1 ? 3 : markerState;
         //strafe into gold mineral
-        while (isFound && !drivetrain.strafeLeft(5, 1000) && opModeIsActive());
+        while (isFound && !drivetrain.strafeLeft(13, 1000) && opModeIsActive());
         sleep(200);
-        while (isFound && !drivetrain.strafeRight(5, 1000) && opModeIsActive());
+        while (isFound && !drivetrain.strafeRight(13, 1000) && opModeIsActive());
 
         //go to depot
-        while (!drivetrain.turnRight(180, 1000) && opModeIsActive());
-        sleep(200);
-        while (!drivetrain.strafeRight(20, 1000) && opModeIsActive());
-        sleep(200);
+        if (markerState == 1) {
+
+        } else if (markerState == 2) {
+            while (!drivetrain.turnRight(180, 1000) && opModeIsActive()) ;
+            sleep(200);
+            while (!drivetrain.strafeRight(35, 1000) && opModeIsActive()) ;
+            sleep(200);
+        } else if (markerState == 3) {
+
+        }
 
         //deposit marker
         drivetrain.getMarker().setPosition(0);
+
+        //strafe off of the marker
+        while (!drivetrain.strafeLeft(7, 1000) && opModeIsActive());
 
         drivetrain.stopMotors();
         drivetrain.stopDetector();
