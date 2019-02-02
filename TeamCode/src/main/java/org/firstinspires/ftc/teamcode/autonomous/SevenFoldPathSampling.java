@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.DcExDrivetrain;
 
 @Autonomous
-public class SevenFoldPathDepotAuton extends LinearOpMode {
+public class SevenFoldPathSampling extends LinearOpMode {
 
     private DcExDrivetrain drivetrain;
 
@@ -52,7 +52,7 @@ public class SevenFoldPathDepotAuton extends LinearOpMode {
 
 
         //move to left mineral
-        while (!isFound && !drivetrain.moveBackward(15, 1000) && opModeIsActive());
+        while (!isFound && !drivetrain.moveBackward(12, 1000) && opModeIsActive());
 
         //check left mineral
         if (!isFound)
@@ -70,43 +70,6 @@ public class SevenFoldPathDepotAuton extends LinearOpMode {
         //strafe into gold mineral
         while (isFound && !drivetrain.strafeLeft(13, 1000) && opModeIsActive());
         sleep(200);
-        while (isFound && !drivetrain.strafeRight(13, 1000) && opModeIsActive());
-
-        //go to depot
-        if (markerState == 3) { // right from lander
-            while (!drivetrain.turnRight(180, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.strafeRight(35, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.turnRight(45, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.strafeRight(20, 1000) && opModeIsActive()) ;
-            sleep(200);
-        }
-        else if (markerState == 2) { // middle
-            while (!drivetrain.turnRight(180, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.strafeRight(40, 1000) && opModeIsActive()) ;
-            sleep(200);
-        }
-        else if (markerState == 1) { // left from lander
-            while (!drivetrain.turnRight(180, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.strafeRight(35, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.turnRight(45, 1000) && opModeIsActive()) ;
-            sleep(200);
-            while (!drivetrain.strafeRight(23, 1000) && opModeIsActive()) ;
-            sleep(200);
-        }
-
-        //deposit marker
-        drivetrain.getMarker().setPosition(0);
-
-        //strafe off of the marker and lift marker mechanism up
-        while (!drivetrain.strafeLeft(9, 1000) && opModeIsActive());
-        drivetrain.getMarker().setPosition(.5);
-        sleep(500);
 
         drivetrain.stopMotors();
         drivetrain.stopDetector();

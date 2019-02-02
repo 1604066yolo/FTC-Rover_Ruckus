@@ -242,7 +242,7 @@ public class DcExDrivetrain {
     }
 
     public boolean isFound() {
-        return detector.isFound();
+        return detector.isFound() && detector.getFoundRect().area() > 3000;
     }
 
     public void sleep(int millis) {
